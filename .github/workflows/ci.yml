@@ -1,0 +1,83 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Secret scan of the full history
+        run: |
+          docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/repo" -w /repo \
+            ghcr.io/gitleaks/gitleaks:v8.30.1 git --redact --verbose .
+
+      - name: Script self-tests
+        run: |
+          bash scripts/deploy.test.sh
+          bash scripts/check.test.sh
+
+      - run: docker build -t site .
+
+      - name: Extract the built site
+        run: |
+          docker create --name extract site
+          docker cp extract:/srv ./public
+          docker rm extract
+
+      - name: Site contract
+        env:
+          LEAK_PATTERNS: ${{ secrets.LEAK_PATTERNS }}
+        run: bash scripts/check.sh public
+
+      - name: Internal links
+        run: |
+          docker run --rm -v "$PWD/public:/public:ro" lycheeverse/lychee:0.24.2 \
+            --offline --no-progress --root-dir /public /public
+
+      - name: Smoke test the container
+        run: |
+          docker run -d --name web -p 8080:80 site
+          # The published port accepts connections a moment before Caddy listens, which curl sees as a reset
+          curl -fsS -o /dev/null --retry 20 --retry-delay 1 --retry-all-errors http://localhost:8080/ || { docker logs web; exit 1; }
+          bash scripts/smoke.sh http://localhost:8080
+
+      # The server pulls this tag, so promote only runs once it exists. GHCR needs the lowercase owner.
+      - name: Publish the image
+        if: github.event_name == 'push'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker tag site ghcr.io/kreprep/krepre-site:$GITHUB_SHA
+          docker push ghcr.io/kreprep/krepre-site:$GITHUB_SHA
+
+  promote:
+    needs: check
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      # live holds only a pointer file, because the workflow token may not push commits that change workflow files.
+      # Force is fine: the concurrency group cancels older runs.
+      - run: |
+          blob=$(echo "$GITHUB_SHA" | git hash-object -w --stdin)
+          tree=$(printf '100644 blob %s\tREVISION\n' "$blob" | git mktree)
+          commit=$(git -c user.name=ci -c user.email=ci@localhost commit-tree "$tree" -m "live: $GITHUB_SHA")
+          git push --force origin "$commit:refs/heads/live"

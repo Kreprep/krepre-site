@@ -1,0 +1,23 @@
+# AI training and scraping crawlers: no access.
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: anthropic-ai
+User-agent: CCBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: Bytespider
+User-agent: PerplexityBot
+User-agent: Meta-ExternalAgent
+User-agent: Amazonbot
+User-agent: cohere-ai
+User-agent: Diffbot
+User-agent: ImagesiftBot
+User-agent: Omgilibot
+User-agent: Timpibot
+Disallow: /
+
+# Everyone else, including search engines and link previews: everything.
+User-agent: *
+Disallow:
+
+Sitemap: {{ "sitemap.xml" | absURL }}

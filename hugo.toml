@@ -1,0 +1,58 @@
+baseURL = "https://xn--pck3dscb.com/"
+locale = "en"
+timeZone = "Asia/Manila"
+title = "Krepre"
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term"]
+
+# Bundle files are published only when a template uses them, so original photos (with EXIF) stay private.
+[cascade.build]
+publishResources = false
+
+[outputs]
+home = ["html"]
+page = ["html"]
+section = ["html"]
+
+[markup.tableOfContents]
+startLevel = 2
+endLevel = 3
+ordered = false
+
+# Lets the image render hook output a figure with a caption for a picture on its own line.
+[markup.goldmark.parser]
+wrapStandAloneImageWithinParagraph = false
+
+[markup.highlight]
+codeFences = false
+
+[params]
+# percent-encoded so the address is not plain text in the public repo; the email partial uses it as is
+email = "%65%75%67%65%6e%65%63%61%79%6c%65%40%67%6d%61%69%6c%2e%63%6f%6d"
+wordmark = "クレプレ"
+
+[[menus.main]]
+name = "Resume"
+pageRef = "/resume"
+weight = 10
+
+[[menus.main]]
+name = "Homelab"
+pageRef = "/homelab"
+weight = 20
+
+[[menus.main]]
+identifier = "writing"
+name = "Writing"
+pageRef = "/writing"
+weight = 30
+
+[[menus.main]]
+name = "GitHub"
+url = "https://github.com/Kreprep"
+weight = 40
+
+[[menus.main]]
+name = "LinkedIn"
+url = "https://www.linkedin.com/in/eugene-cayle-maniego"
+weight = 50

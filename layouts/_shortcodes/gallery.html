@@ -1,0 +1,13 @@
+{{- with $.Page.Resources.Match (.Get 0) -}}
+<div class="gallery">
+{{- range . }}
+{{- $thumb := partial "webp.html" (dict "r" . "w" 480) }}
+{{- $big := partial "webp.html" (dict "r" . "w" 1920) }}
+{{- /* The picture is the link's only content, so it needs alt text or the link has no name for screen readers. */ -}}
+{{- if not .Params.alt }}{{ warnf "gallery: %s in %s has no alt text (see README, Write a post)" .Name $.Page.File.Path }}{{ end }}
+<a href="{{ $big.RelPermalink }}"><img src="{{ $thumb.RelPermalink }}" width="{{ $thumb.Width }}" height="{{ $thumb.Height }}" alt="{{ or .Params.alt "Picture, opens full size" }}" loading="lazy"></a>
+{{- end }}
+</div>
+{{- else -}}
+{{ errorf "gallery: no page resource matches %q in %s" (.Get 0) .Page.File.Path }}
+{{- end -}}

@@ -1,0 +1,19 @@
+{{- $title := site.Title }}{{ if not .IsHome }}{{ $title = printf "%s · %s" .Title site.Title }}{{ end -}}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ $title }}</title>
+{{ with .Description }}<meta name="description" content="{{ . }}">
+{{ end -}}
+<link rel="canonical" href="{{ .Permalink }}">
+<meta name="color-scheme" content="dark light">
+<meta property="og:title" content="{{ .Title }}">
+{{ with .Description }}<meta property="og:description" content="{{ . }}">
+{{ end -}}
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/ioskeley-mono-2.2.0-400.woff2" as="font" type="font/woff2" crossorigin>
+{{ with resources.Get "css/main.css" | minify | fingerprint -}}
+<link rel="stylesheet" href="{{ .RelPermalink }}">
+{{ end -}}

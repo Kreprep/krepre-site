@@ -1,0 +1,10 @@
+[Unit]
+Description=Deploy the commit named by the live branch
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=eugene
+WorkingDirectory=/docker/site
+ExecStart=/docker/site/deploy.sh

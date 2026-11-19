@@ -1,0 +1,12 @@
+services:
+  site:
+    image: ghcr.io/kreprep/krepre-site:${SITE_REVISION}
+    container_name: site
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO", "/dev/null", "http://127.0.0.1/"]
+      interval: 5s
+      timeout: 3s
+      retries: 3

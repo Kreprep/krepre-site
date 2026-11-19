@@ -1,0 +1,14 @@
+# Hugo output and caches
+/public/
+/resources/
+.hugo_build.lock
+
+# Local only: text that must never appear in the built site (read by scripts/check.sh)
+.leak-patterns
+
+# Written by deploy.sh on the server
+.deployed
+.env
+.deploy.lock
+
+CLAUDE.md

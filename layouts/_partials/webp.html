@@ -1,0 +1,6 @@
+{{- /* Returns an image resource as WebP no wider than .w; SVG and GIF pass through unchanged. */ -}}
+{{- $r := .r -}}
+{{- if not (in (slice "image/svg+xml" "image/gif") $r.MediaType.Type) -}}
+  {{- if gt $r.Width .w }}{{ $r = $r.Resize (printf "%dx webp" .w) }}{{ else }}{{ $r = $r.Process "webp" }}{{ end -}}
+{{- end -}}
+{{- return $r -}}

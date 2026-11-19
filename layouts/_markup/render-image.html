@@ -1,0 +1,17 @@
+{{- $r := "" -}}
+{{- if not (urls.Parse .Destination).Scheme }}{{ $r = .PageInner.Resources.Get .Destination }}{{ end -}}
+{{- with $r }}{{ $i := partial "webp.html" (dict "r" . "w" 1440) -}}
+{{- if $.IsBlock -}}
+{{- $big := partial "webp.html" (dict "r" . "w" 1920) -}}
+{{- /* The picture is the link's only content, so an empty alt would leave the link without a name for screen readers. */ -}}
+<figure><a href="{{ $big.RelPermalink }}"><img src="{{ $i.RelPermalink }}"{{ if reflect.IsImageResourceWithMeta $i }} width="{{ $i.Width }}" height="{{ $i.Height }}"{{ end }} alt="{{ or $.PlainText "Picture, opens full size" }}" loading="lazy"></a>{{ with $.Title }}<figcaption>{{ . }}</figcaption>{{ end }}</figure>
+{{- else -}}
+<img src="{{ $i.RelPermalink }}"{{ if reflect.IsImageResourceWithMeta $i }} width="{{ $i.Width }}" height="{{ $i.Height }}"{{ end }} alt="{{ $.PlainText }}" loading="lazy">
+{{- end -}}
+{{- else -}}
+{{- if .IsBlock -}}
+<figure><img src="{{ .Destination | safeURL }}" alt="{{ .PlainText }}">{{ with .Title }}<figcaption>{{ . }}</figcaption>{{ end }}</figure>
+{{- else -}}
+<img src="{{ .Destination | safeURL }}" alt="{{ .PlainText }}">
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,6 @@
+# The server runs Linux: keep LF everywhere, even for files edited on Windows
+* text=auto eol=lf
+*.woff2 binary
+*.pdf binary
+*.png binary
+*.ico binary

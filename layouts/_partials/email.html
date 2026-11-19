@@ -1,0 +1,2 @@
+{{- /* site.Params.email is already percent-encoded so plain-text scrapers miss it; context is the link text. */ -}}
+<a href="mailto:{{ site.Params.email | safeURL }}">{{ . }}</a>

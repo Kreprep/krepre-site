@@ -1,0 +1,550 @@
+/* ==========================================================
+   Font and colours
+   ========================================================== */
+
+/* The only font file. Fallbacks are listed in the html rule below. */
+@font-face {
+  font-family: "Ioskeley Mono";
+  src: url(/fonts/ioskeley-mono-2.2.0-400.woff2) format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Dark colours, used by default.
+   --bg      page background; also the text colour on inverted items
+   --fg      body text; background of inverted items (hover, current menu entry, bold text); the cursor
+   --muted   post dates and descriptions, picture captions, footer text
+   --line    rules and borders: header, footer, tables, code, quotes, hr
+   --accent  list bullets, text selection, wordmark hover, focus outline */
+:root {
+  --bg: #101214;
+  --fg: #e4e0d4;
+  --muted: #9b9a93;
+  --line: #2f3336;
+  --accent: #e0674f;
+}
+
+/* Light colours, for visitors whose system is set to a light theme. */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f6f2;
+    --fg: #14171a;
+    --muted: #5f6368;
+    --line: #d9d7d0;
+    --accent: #c2452d;
+  }
+}
+
+/* Spacing. Change a value here to change it everywhere.
+   Every block gets space below it only, never above.
+   --gap    big breaks: under the header, under the page title, under main before the footer,
+            under the contents list. Fixed, so the page keeps the same rhythm at every window size.
+   --space  between content blocks: paragraphs, lists, tables, code, quotes, pictures, cover images, galleries.
+   Two exceptions on purpose: headings (## and ###) get --gap above, because a new section must
+   start further away than blocks are from each other; "---" lines get --gap on both sides,
+   because the line sits in the middle of a break. */
+:root {
+  --gap: 2.5rem;
+  --space: 1.5rem;
+}
+
+/* Reset: no browser default spacing, so every gap on the page comes from a rule in this file. border-box makes width include padding and border. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Whole page: colours, the one font, base size and line height.
+   font-synthesis-weight stops the browser faking bold, because the font has only weight 400. */
+html {
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 1rem/1.65 "Ioskeley Mono", ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  font-synthesis-weight: none;
+  /* A long path or URL with no spaces breaks at the column edge instead of pushing the page sideways on phones. */
+  overflow-wrap: break-word;
+  /* The font file has programming ligatures; keep -> and != as typed. */
+  font-variant-ligatures: none;
+}
+
+/* ==========================================================
+   Page frame
+   ========================================================== */
+
+/* Fixed space around the whole page, top, sides and bottom, the same at every window width. */
+body {
+  padding: 3rem;
+}
+
+/* Space above the footer line. The last block's own margin merges into it. */
+main {
+  margin-bottom: var(--gap);
+}
+
+/* The three blocks of layouts/baseof.html share one column, centred so the space left and right is equal on wide windows. */
+header,
+main,
+footer {
+  max-width: 72ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Highlighted text when the visitor selects it. */
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* ==========================================================
+   Links
+   ========================================================== */
+
+/* Every link: same colour as the text, underlined. */
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+/* Mouse hover and keyboard focus: the link turns inverted. */
+a:hover,
+a:focus-visible {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* Keyboard focus also gets an outline, so it is always visible. */
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* "Skip to content" link in layouts/baseof.html: off screen until it gets keyboard focus. */
+.skip:not(:focus) {
+  position: absolute;
+  left: -999rem;
+}
+
+/* ==========================================================
+   Header and menu (layouts/_partials/header.html)
+   ========================================================== */
+
+/* The header block with the rule under it. Padding is the space above the rule, margin the space below it. */
+header {
+  border-bottom: 2px solid var(--line);
+  margin-bottom: var(--gap);
+  padding-bottom: var(--gap);
+}
+
+/* The home link: logo image and クレプレ on one line, no underline. A block (flex) only as wide as its content, so margin-bottom is exactly the space above the menu. */
+.wordmark {
+  display: flex;
+  width: fit-content;
+  margin-bottom: 1rem;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 2.5rem;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+/* The logo image (assets/logo.*): grey at rest. */
+.wordmark img {
+  width: 4rem;
+  height: 4rem;
+  filter: grayscale(1);
+}
+
+/* Logo on hover and keyboard focus: back to its own colours. */
+.wordmark:hover img,
+.wordmark:focus-visible img {
+  filter: grayscale(0);
+}
+
+/* The colour fades in and out, only for visitors who have not asked for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .wordmark img {
+    transition: filter 0.3s ease;
+  }
+}
+
+/* Wordmark hover and focus: accent colour instead of the inverted look of other links. */
+.wordmark:hover,
+.wordmark:focus-visible {
+  background: none;
+  color: var(--accent);
+}
+
+/* The menu list flows into columns: 2 on phones, more on wider screens (media queries below). No space below, the header's padding does that. */
+nav ul {
+  columns: 2;
+  list-style: none;
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
+/* Gap between menu rows. */
+nav li {
+  margin-bottom: 0.25rem;
+}
+
+/* Each menu entry is a block on its own line and never wraps. */
+nav a {
+  display: block;
+  white-space: nowrap;
+}
+
+/* The menu entry of the page you are on is shown inverted. */
+nav a[aria-current] {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+@media (min-width: 500px) {
+  nav ul {
+    columns: 3;
+  }
+}
+
+@media (min-width: 700px) {
+  nav ul {
+    columns: 4;
+  }
+}
+
+/* ==========================================================
+   Titles and the cursor
+   ========================================================== */
+
+/* All headings: weight 400 because the font has no bold; they differ only by size. */
+h1,
+h2,
+h3 {
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+/* Page title (front matter "title"), smaller on phones. */
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: var(--gap);
+}
+
+/* Block cursor after the page title. A full block character, so the font lines it up with the letters. */
+h1::after {
+  content: "\2588";
+  margin-left: 0.2em;
+}
+
+@media (min-width: 500px) {
+  h1 {
+    font-size: 2rem;
+  }
+}
+
+/* The cursor blinks only for visitors who have not asked for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  h1::after {
+    animation: blink 1.1s steps(1) infinite;
+  }
+}
+
+/* The blink itself: hidden for the second half of each cycle. */
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Markdown "##" heading. Exception to "space below only": --gap above, so a new section starts further away. */
+h2 {
+  font-size: 1.4rem;
+  margin: var(--gap) 0 0.75rem;
+}
+
+/* Markdown "###" heading. Exception to "space below only": --gap above, like "##". */
+h3 {
+  font-size: 1.15rem;
+  margin: var(--gap) 0 0.5rem;
+}
+
+/* A "###" straight after a "##" belongs to it: no extra gap above, only the "##" space below. */
+h2 + h3 {
+  margin-top: 0;
+}
+
+/* The description line under the page title (home.html, page.html, section.html, 404.html). */
+.lead {
+  font-size: 1.15rem;
+}
+
+/* ==========================================================
+   Text elements from Markdown
+   ========================================================== */
+
+/* Markdown **bold**: shown inverted, because the font has no bold weight. */
+strong {
+  background: var(--fg);
+  color: var(--bg);
+  font-weight: 400;
+}
+
+/* A link inside bold text already takes the inverted colour (a: color inherit). Hover and focus swap back, so the link still reacts. */
+strong a:hover,
+strong a:focus-visible {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Markdown paragraphs, and the description line (.lead). */
+p {
+  margin-bottom: var(--space);
+}
+
+/* Markdown "- item" and "1. item" lists: space below the list and an indent for the bullets. */
+ul,
+ol {
+  margin-bottom: var(--space);
+  padding-left: 2rem;
+}
+
+/* A list inside a list item: no space below, so the item after it stays close. */
+li > ul,
+li > ol {
+  margin-bottom: 0;
+}
+
+/* Markdown "- item" list: square bullets. */
+ul {
+  list-style: square;
+}
+
+/* Space between list items in page content. Scoped to main, so the header menu is not affected. */
+main li {
+  margin-bottom: 0.6em;
+}
+
+/* The bullet itself. */
+li::marker {
+  color: var(--accent);
+}
+
+/* Markdown pipe table. display: block lets a wide table scroll sideways on its own, with no wrapper element. */
+table {
+  display: block;
+  margin-bottom: var(--space);
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+/* Table cells and header cells. */
+th,
+td {
+  border: 1px solid var(--line);
+  padding: 0.55rem 0.9rem;
+  text-align: left;
+}
+
+/* Markdown fenced code block. Long lines scroll sideways. */
+pre {
+  border: 1px solid var(--line);
+  margin-bottom: var(--space);
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+/* Markdown `inline code` and code inside a block: same font and size as the text. */
+code {
+  font: inherit;
+}
+
+/* Only inline code gets a thin border; code inside a fenced block is already framed by pre. */
+:not(pre) > code {
+  border: 1px solid var(--line);
+  padding: 0 0.25em;
+}
+
+/* Markdown "> quote". */
+blockquote {
+  margin-bottom: var(--space);
+  padding-left: 1rem;
+  border-left: 2px solid var(--line);
+}
+
+/* The last paragraph in a quote: no space below, so the side line ends with the text. */
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* Markdown "---" horizontal rule. Exception to "space below only": --gap on both sides, because the line sits in the middle of a break. */
+hr {
+  border: 0;
+  border-top: 2px solid var(--line);
+  margin: var(--gap) 0;
+}
+
+/* ==========================================================
+   Post list (layouts/section.html, the /writing/ page)
+   ========================================================== */
+
+/* The list itself: no bullets. */
+.posts {
+  list-style: none;
+  padding-left: 0;
+}
+
+/* One post: title on the left, date on the right, description on its own line below. */
+.posts li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 1rem;
+  margin-bottom: 1rem;
+}
+
+/* A post's date: in the post list, and under the title of a post (.date in layouts/page.html). */
+.posts time,
+.date {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* The description: full width, so it wraps onto the next line. */
+.posts p {
+  flex-basis: 100%;
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+/* ==========================================================
+   Contents list (front matter "toc: true", layouts/page.html)
+   ========================================================== */
+
+/* Collapsible contents list (front matter "toc: true", layouts/page.html): closed until the visitor opens it. The rule under it stays. */
+.toc {
+  margin-bottom: var(--gap);
+  padding-bottom: var(--gap);
+  border-bottom: 2px solid var(--line);
+}
+
+/* The "Contents" line that opens and closes the list. */
+.toc summary {
+  cursor: pointer;
+}
+
+/* Hugo's own nav inside the details is a nav, so these undo the menu styling of "nav ul" and "nav a" above. */
+.toc ul {
+  columns: auto;
+  list-style: square;
+  margin-bottom: 0;
+  padding-left: 1.5rem;
+}
+
+/* Items in the contents list: closer together than in page text. Space goes above each item (an exception to below-only), so a heading and its first sub-item get the same gap as every other pair. */
+.toc li {
+  margin-top: 0.4em;
+  margin-bottom: 0;
+}
+
+/* Contents links: plain inline links, not the block menu links. */
+.toc a {
+  display: inline;
+  white-space: normal;
+}
+
+/* ==========================================================
+   Footer (layouts/_partials/footer.html)
+   ========================================================== */
+
+/* The footer block with the rule above it. */
+footer {
+  padding-top: var(--gap);
+  border-top: 2px solid var(--line);
+  color: var(--muted);
+}
+
+/* Its small text lines. Space only below, so the gap under the rule is exactly --gap. */
+footer p {
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+/* ==========================================================
+   Images
+   ========================================================== */
+
+/* Images in posts never get wider than the column. The logo keeps its own size (.wordmark img above). */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Cover image of a page (front matter "cover", layouts/page.html): full column width. */
+.cover {
+  display: block;
+  width: 100%;
+  margin-bottom: var(--space);
+}
+
+/* A picture on its own line in Markdown (layouts/_markup/render-image.html). */
+figure {
+  margin-bottom: var(--space);
+}
+
+/* The link and the picture in a figure: blocks, so the link is exactly the picture and there is no gap under it. */
+figure a,
+figure img {
+  display: block;
+}
+
+/* Linked pictures (figures and gallery thumbnails) keep no inverted hover background. The focus outline from a:focus-visible still shows. */
+figure a:hover,
+figure a:focus-visible,
+.gallery a:hover,
+.gallery a:focus-visible {
+  background: none;
+}
+
+/* The caption under a picture, from the image title: ![alt](file.jpg "caption"). */
+figcaption {
+  padding-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Masonry of pictures from the gallery shortcode (layouts/_shortcodes/gallery.html): 2 columns, 3 on wider screens. Pictures of different shapes leave no holes. */
+.gallery {
+  columns: 2;
+  column-gap: 1rem;
+  margin-bottom: var(--space);
+}
+
+@media (min-width: 700px) {
+  .gallery {
+    columns: 3;
+  }
+}
+
+/* A thumbnail link is the click target; it stays in one piece and has 1rem below it. */
+.gallery a {
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 1rem;
+}
+
+/* The last thumbnail: no space below, so the gallery ends at its tallest column. The browser already drops this margin at the bottom of the other columns. */
+.gallery a:last-child {
+  margin-bottom: 0;
+}
+
+/* The thumbnail fills the column width and keeps its aspect ratio. */
+.gallery img {
+  display: block;
+  width: 100%;
+}
