@@ -109,7 +109,9 @@ a {
   color: inherit;
   text-decoration: underline;
   text-decoration-thickness: 2px;
-  text-underline-offset: 0.2em;
+  text-underline-offset: 0.3em;
+  /* Solid line: the font's long descenders (p, j, g, parentheses) would otherwise cut gaps in it. */
+  text-decoration-skip-ink: none;
 }
 
 /* Mouse hover and keyboard focus: the link turns inverted. */
@@ -117,6 +119,7 @@ a:hover,
 a:focus-visible {
   background: var(--fg);
   color: var(--bg);
+  text-decoration-color: var(--fg);
 }
 
 /* Keyboard focus also gets an outline, so it is always visible. */
@@ -181,7 +184,7 @@ header {
   color: var(--accent);
 }
 
-/* The menu list flows into columns: 2 on phones, more on wider screens (media queries below). No space below, the header's padding does that. */
+/* The menu list flows into columns: 2 on phones, 3 from 500px wide and 3 beside the logo from 700px (media queries below). No space below, the header's padding does that. */
 nav ul {
   columns: 2;
   list-style: none;
@@ -212,9 +215,34 @@ nav a[aria-current] {
   }
 }
 
+/* Wide screens put the logo and name in their own column with the menu in three columns beside it. The name size is set so its four characters are as wide as the logo. */
 @media (min-width: 700px) {
+  /* The header becomes two columns: logo and name (1fr), menu (3fr). */
+  header {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    align-items: start;
+  }
+
+  /* The home link stacks the logo above the name. The grid column supplies the space, so no margin below. */
+  .wordmark {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0;
+    font-size: 1.5rem;
+    line-height: 1.2;
+  }
+
+  /* The larger logo, as wide as the four characters of the name. */
+  .wordmark img {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  /* The menu keeps three columns beside the logo. */
   nav ul {
-    columns: 4;
+    columns: 3;
   }
 }
 
@@ -239,7 +267,7 @@ h1 {
 /* Block cursor after the page title. A full block character, so the font lines it up with the letters. */
 h1::after {
   content: "\2588";
-  margin-left: 0.2em;
+  margin-left: 0.1em;
 }
 
 @media (min-width: 500px) {
@@ -300,6 +328,7 @@ strong a:hover,
 strong a:focus-visible {
   background: var(--bg);
   color: var(--fg);
+  text-decoration-color: var(--bg);
 }
 
 /* Markdown paragraphs, and the description line (.lead). */
@@ -471,8 +500,9 @@ footer {
 
 /* Its small text lines. Space only below, so the gap under the rule is exactly --gap. */
 footer p {
-  margin-bottom: 0.5rem;
-  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 /* ==========================================================

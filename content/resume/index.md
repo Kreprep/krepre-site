@@ -56,7 +56,7 @@ Proxmox VE, LXC, Docker, ZFS, Caddy, CrowdSec, Bash. [Full write-up](/homelab/).
 
 ### TravelEase (2025)
 
-"TravelEase: A Checklist System for Flight and Multi-type Visa Documents with AI-Assisted Verification for Philippine Travel". Flutter, Dart, Firebase, Google Cloud Functions, OpenAI API. Team project. [Source](https://github.com/BiancaEllaOcampo/TravelEase).
+"TravelEase: A Checklist System for Flight and Multi-type Visa Documents with AI-Assisted Verification for Philippine Travel". Flutter, Dart, Firebase, Google Cloud Functions, OpenAI API. Team project. [Demo video](https://www.youtube.com/watch?v=fS2SoIeM3h0&t=677s), [source](https://github.com/BiancaEllaOcampo/TravelEase).
 
 - Flutter (Android) app that gives Filipino travelers destination-specific document checklists (Japan, Hong Kong, South Korea, Singapore, China) and checks uploaded flight tickets, visas and proof of accommodation with AI. Reviewed and merged the team's pull requests on GitHub
 - Built a serverless AI pipeline with Firebase Cloud Functions and the OpenAI GPT-4o API that reads each uploaded document and marks it verified or needing correction, with the API key secured in Google Secret Manager

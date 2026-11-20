@@ -2,7 +2,7 @@
 {{- $page := . -}}
 <header>
 <a class="wordmark" href="/" aria-label="Krepre, home">
-{{- with resources.GetMatch "logo.*" }}{{ if eq .MediaType.SubType "svg+xml" }}<img src="{{ .RelPermalink }}" width="48" height="48" alt="">{{ else }}{{ with .Resize "144x144 webp" }}<img src="{{ .RelPermalink }}" width="48" height="48" alt="">{{ end }}{{ end }}{{ end -}}
+{{- with resources.GetMatch "logo.*" }}{{ if eq .MediaType.SubType "svg+xml" }}<img src="{{ .RelPermalink }}" width="48" height="48" alt="">{{ else }}{{ with .Resize "192x192 webp" }}<img src="{{ .RelPermalink }}" width="48" height="48" alt="">{{ end }}{{ end }}{{ end -}}
 <span lang="ja">{{ site.Params.wordmark }}</span></a>
 <nav aria-label="Main">
 <ul>
