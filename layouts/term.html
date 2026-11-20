@@ -1,0 +1,4 @@
+{{ define "main" }}
+<h1>{{ $t := .Data.Term }}{{ printf "%s%s" (upper (substr $t 0 1)) (substr $t 1) }}</h1>
+{{ partial "posts.html" .Pages }}
+{{ end }}

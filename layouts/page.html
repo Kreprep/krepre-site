@@ -1,8 +1,6 @@
 {{ define "main" }}
 <h1>{{ .Title }}</h1>
 {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
-{{ if eq .Section "writing" }}<p class="date"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 Jan 2006" }}</time></p>
-{{ end }}
 {{- with .Params.cover }}
 {{- with $.Resources.Get . }}{{ $i := partial "webp.html" (dict "r" . "w" 1440) -}}
 <img class="cover" src="{{ $i.RelPermalink }}" width="{{ $i.Width }}" height="{{ $i.Height }}" alt="{{ $.Params.cover_alt }}">
@@ -11,4 +9,7 @@
 {{ if .Params.toc }}<details class="toc"><summary>Contents</summary><nav aria-label="Contents">{{ .TableOfContents | replaceRE "</?nav[^>]*>" "" | safeHTML }}</nav></details>
 {{ end }}
 {{ .Content }}
+{{ if not .Parent.IsHome }}<p class="meta">Published on <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time> and updated on <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format "2006-01-02" }}</time> in <a href="{{ .CurrentSection.RelPermalink }}">{{ .Section | lower }}</a>
+{{- with .GetTerms "tags" }} and tagged with{{ range . }} <a href="{{ .RelPermalink }}">{{ .Data.Term }}</a>{{ end }}{{ end }}</p>
+{{ end }}
 {{ end }}

@@ -3,16 +3,24 @@ locale = "en"
 timeZone = "Asia/Manila"
 title = "Krepre"
 enableRobotsTXT = true
-disableKinds = ["taxonomy", "term"]
+disableKinds = ["taxonomy"]
 
 # Bundle files are published only when a template uses them, so original photos (with EXIF) stay private.
 [cascade.build]
 publishResources = false
 
+# Tags live at /tag/<name>/ (the "taxonomy" kind stays off, so there is no /tag/ index page).
+[taxonomies]
+tag = "tags"
+
+[permalinks.term]
+tags = "/tag/:slug/"
+
 [outputs]
 home = ["html"]
 page = ["html"]
 section = ["html"]
+term = ["html"]
 
 [markup.tableOfContents]
 startLevel = 2
@@ -40,12 +48,6 @@ weight = 10
 name = "Homelab"
 pageRef = "/homelab"
 weight = 20
-
-[[menus.main]]
-identifier = "writing"
-name = "Writing"
-pageRef = "/writing"
-weight = 30
 
 [[menus.main]]
 name = "GitHub"

@@ -419,7 +419,7 @@ hr {
 }
 
 /* ==========================================================
-   Post list (layouts/section.html, the /writing/ page)
+   Post list (layouts/section.html, the list page of each section such as /journal/)
    ========================================================== */
 
 /* The list itself: no bullets. */
@@ -428,27 +428,75 @@ hr {
   padding-left: 0;
 }
 
-/* One post: title on the left, date on the right, description on its own line below. */
+/* One post: the link (title, date, cover) with the description below it. */
 .posts li {
+  margin-bottom: var(--space);
+}
+
+/* The whole-entry link: title on the left, date on the right, cover on its own line. No underline here, only the title has one, and no inverted background over the cover. */
+.posts a {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 0 1rem;
-  margin-bottom: 1rem;
+  text-decoration: none;
 }
 
-/* A post's date: in the post list, and under the title of a post (.date in layouts/page.html). */
-.posts time,
-.date {
+/* Entry link on hover and keyboard focus: no background (the focus outline from a:focus-visible stays). */
+.posts a:hover,
+.posts a:focus-visible {
+  background: none;
+  color: inherit;
+}
+
+/* The title keeps the link look: underlined. Offset and skip-ink are inherited from the a rule. */
+.posts .title {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+/* Title on hover and keyboard focus of the entry: inverted like other links. */
+.posts a:hover .title,
+.posts a:focus-visible .title {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* Cover in a post list (layouts/_partials/posts.html): own line, a little space above and below. */
+.posts img {
+  flex-basis: 100%;
+  margin: 0.5rem 0;
+}
+
+/* A post's date in the post list. */
+.posts time {
   font-size: 0.85rem;
   color: var(--muted);
 }
 
-/* The description: full width, so it wraps onto the next line. */
+/* The description, under the entry link. */
 .posts p {
-  flex-basis: 100%;
   margin-bottom: 0;
   color: var(--muted);
+}
+
+/* Covers in post lists are grey until the entry is hovered or focused. Only where hover exists, so phones show colour. */
+@media (hover: hover) {
+  .posts img {
+    filter: grayscale(1);
+  }
+
+  .posts a:hover img,
+  .posts a:focus-visible img {
+    filter: grayscale(0);
+  }
+}
+
+/* The colour fades in and out, only for visitors who have not asked for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .posts img {
+    transition: filter 0.3s ease;
+  }
 }
 
 /* ==========================================================
@@ -503,6 +551,18 @@ footer p {
   margin-bottom: 0.25rem;
   font-size: 0.875rem;
   line-height: 1.5;
+}
+
+/* ==========================================================
+   Post meta line (layouts/page.html, end of each post)
+   ========================================================== */
+
+/* Published and updated dates, section and tags, under the post text. Same rule and spacing as the footer. */
+.meta {
+  margin-top: var(--gap);
+  padding-top: var(--gap);
+  border-top: 2px solid var(--line);
+  color: var(--muted);
 }
 
 /* ==========================================================

@@ -15,7 +15,7 @@ get() {
 }
 has() { grep -qiE "$1" <<< "$headers"; }
 
-for p in / /resume/ /homelab/ /writing/; do
+for p in / /resume/ /homelab/; do
 	get "$p"
 	[ "$status" = 200 ] || fail "$p returned $status, want 200"
 	has '^content-type: text/html' || fail "$p is not text/html"

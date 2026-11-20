@@ -2,17 +2,5 @@
 <h1>{{ .Title }}</h1>
 {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
 {{ .Content }}
-{{ with .Pages.ByDate.Reverse }}
-<ul class="posts">
-{{- range . }}
-<li>
-<a href="{{ .RelPermalink }}">{{ .Title }}</a>
-<time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 Jan '06" }}</time>
-<p>{{ .Description }}</p>
-</li>
-{{- end }}
-</ul>
-{{ else }}
-<p>Nothing is published yet.</p>
-{{ end }}
+{{ partial "posts.html" .Pages }}
 {{ end }}
