@@ -203,10 +203,11 @@ nav a {
   white-space: nowrap;
 }
 
-/* The menu entry of the page you are on is shown inverted. */
+/* The menu entry of the page you are on is shown inverted, with no underline. */
 nav a[aria-current] {
   background: var(--fg);
   color: var(--bg);
+  text-decoration: none;
 }
 
 @media (min-width: 500px) {
