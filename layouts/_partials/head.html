@@ -12,7 +12,9 @@
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
 <meta property="og:site_name" content="{{ site.Title }}">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+{{/* Per-page icon from クレプレ (no JS allowed): home gets ク, other pages pick レ/プ/レ by a hash of the address. */ -}}
+{{ $icons := slice "favicon" "favicon-re" "favicon-pu" "favicon-re" -}}
+<link rel="icon" href="/{{ index $icons (cond .IsHome 0 (add 1 (mod (hash.FNV32a .RelPermalink) 3))) }}.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/ioskeley-mono-2.2.0-400.woff2" as="font" type="font/woff2" crossorigin>
 {{ with resources.Get "css/main.css" | minify | fingerprint -}}
 <link rel="stylesheet" href="{{ .RelPermalink }}">
