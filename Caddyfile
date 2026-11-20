@@ -20,14 +20,17 @@
 	@notpdf not path *.pdf
 	header @notpdf Content-Security-Policy "default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
 
-	@immutable path /css/* /fonts/*
+	# Fingerprinted CSS, the versioned font and Hugo's processed images (name_hu_<hash>) never change at the same URL
+	@immutable path_regexp ^/(css|fonts)/|_hu_[0-9a-f]+\.
 	header @immutable Cache-Control "public, max-age=31536000, immutable"
-	@revalidate not path /css/* /fonts/*
+	@revalidate not path_regexp ^/(css|fonts)/|_hu_[0-9a-f]+\.
 	header @revalidate Cache-Control "no-cache"
 
 	header /resume.pdf Content-Disposition `inline; filename="Eugene-Maniego-Resume.pdf"`
 
 	handle_errors {
+		# Otherwise a 404 under /css/ or /fonts/ keeps the immutable header and browsers cache it for a year
+		header Cache-Control "no-cache"
 		rewrite * /404.html
 		file_server
 	}

@@ -27,10 +27,20 @@ has '^x-content-type-options: nosniff' || fail "/ lacks X-Content-Type-Options: 
 has '^strict-transport-security:' || fail "/ lacks Strict-Transport-Security"
 css=$(grep -oE '/css/[^"'"'"' >]+\.css' "$tmp/body" | head -n 1 || true)
 [ -n "$css" ] || fail "/ links no stylesheet under /css/"
+img=$(grep -oE '/[^"'"'"' >]*_hu_[0-9a-f]+\.[a-z]+' "$tmp/body" | head -n 1 || true)
+[ -n "$img" ] || fail "/ shows no Hugo-processed image (_hu_)"
 
 get "$css"
 [ "$status" = 200 ] || fail "$css returned $status, want 200"
 has '^cache-control:.*immutable' || fail "$css is not served immutable"
+
+get "$img"
+[ "$status" = 200 ] || fail "$img returned $status, want 200"
+has '^cache-control:.*immutable' || fail "$img is not served immutable"
+
+get /css/no-such-file.css
+[ "$status" = 404 ] || fail "missing stylesheet returned $status, want 404"
+! has '^cache-control:.*immutable' || fail "a 404 under /css/ is cached as immutable"
 
 get /no-such-page/
 [ "$status" = 404 ] || fail "missing page returned $status, want 404"
