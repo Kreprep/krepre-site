@@ -35,7 +35,7 @@ March 2023, remote. Senior high school work immersion.
 Proxmox VE, LXC, Docker, ZFS, Caddy, CrowdSec, Bash. [Full write-up](/homelab/).
 
 - Built and maintain a Proxmox VE 9 server (Ryzen 5 3600, 24 GB RAM) running 7 LXC containers with Docker Compose stacks: media streaming, reverse proxy, notes sync (CouchDB), game servers (Pelican), a public thesis web app and this website
-- Published services under a personal domain through Caddy with Let's Encrypt TLS (Cloudflare DNS-01), CrowdSec intrusion prevention and an AppSec WAF on every public request, and dynamic DNS. Web traffic from the internet reaches only the proxy, on ports 80 and 443
+- Published services under a personal domain through Caddy with Let's Encrypt TLS (deSEC DNS-01, DNSSEC), CrowdSec intrusion prevention and an AppSec WAF on every public request, and dynamic DNS. Web traffic from the internet reaches only the proxy, on ports 80 and 443
 - Hardened access with key-only SSH on the host and every container, root SSH disabled in containers, TOTP 2FA on the Proxmox web UI, and unprivileged containers by default
 - Manage a 7.2 TB ZFS RAIDZ1 pool on three 4 TB enterprise HDDs: replaced failing disks by resilvering, vetted used drives with SMART and Seagate FARM logs (caught two relabeled drives), and tuned drive firmware power settings with openSeaChest
 - Recovered from a boot SSD failure by reinstalling Proxmox and rebuilding services from self-written runbooks. Set up nightly vzdump snapshot backups (zstd, tiered daily, weekly and monthly retention) with email alerts
@@ -102,6 +102,6 @@ Science, Technology, Engineering and Mathematics (STEM) track. September 2021 to
 | Languages | Bash, Python, JavaScript (Node.js), SQL, Java, C++, Dart |
 | Infrastructure and virtualization | Linux (Debian, Ubuntu), Proxmox VE, Docker, Docker Compose, LXC, GPU passthrough (VA-API), Windows Active Directory |
 | Storage and backup | ZFS (RAIDZ1, resilvering, scrubs), LVM-thin, Samba, vzdump snapshot backups, SMART disk diagnostics |
-| Networking and security | TCP/IP, DNS (Cloudflare, Pi-hole), dynamic DNS, reverse proxies (Caddy, nginx), TLS (Let's Encrypt, DNS-01), port forwarding, CrowdSec (IPS, AppSec WAF), SSH hardening, TOTP 2FA |
+| Networking and security | TCP/IP, DNS (deSEC, DNSSEC, Pi-hole), dynamic DNS, reverse proxies (Caddy, nginx), TLS (Let's Encrypt, DNS-01), port forwarding, CrowdSec (IPS, AppSec WAF), SSH hardening, TOTP 2FA |
 | Cloud | Oracle Cloud Infrastructure, Firebase / Google Cloud |
 | Frameworks and tools | Git, GitHub Actions, Jira, React, Vite, Three.js / React Three Fiber, Express, Prisma, PostgreSQL, MySQL, Flutter, Tailwind CSS, OpenAI API |

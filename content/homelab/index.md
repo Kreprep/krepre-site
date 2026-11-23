@@ -32,7 +32,7 @@ Reverse proxy container
 The service's container
 ```
 
-Caddy gets its Let's Encrypt certificates through the Cloudflare DNS-01 challenge. Every public request goes through CrowdSec first, which bans known bad addresses and the ones that misbehave in my logs, then through its AppSec WAF, which blocks exploit requests inline, and only after that is it proxied to the service. A dynamic DNS updater keeps the DNS records pointed at my home connection.
+Caddy gets its Let's Encrypt certificates through the DNS-01 challenge at deSEC, which hosts my DNS with DNSSEC. Every public request goes through CrowdSec first, which bans known bad addresses and the ones that misbehave in my logs, then through its AppSec WAF, which blocks exploit requests inline, and only after that is it proxied to the service. A dynamic DNS updater keeps the DNS records pointed at my home connection.
 
 Web UIs that are only for me sit behind one wildcard hostname. Its certificate also comes from DNS-01, so those names never show up in public certificate logs, and the proxy closes any connection that doesn't come from a private address.
 
@@ -40,7 +40,7 @@ Web UIs that are only for me sit behind one wildcard hostname. Its certificate a
 
 | Container | Runs | Reachable from |
 |---|---|---|
-| Reverse proxy | Caddy (custom build with Cloudflare DNS and CrowdSec modules), CrowdSec, AppSec WAF | Internet (ports 80 and 443) |
+| Reverse proxy | Caddy (custom build with deSEC DNS and CrowdSec modules), CrowdSec, AppSec WAF | Internet (ports 80 and 443) |
 | Media | Jellyfin with GPU transcoding over VA-API, and a request portal | Internet, through the proxy |
 | Game servers | Pelican panel and Wings, hosting Minecraft and Project Zomboid | Panel through the proxy, game ports forwarded |
 | Notes sync | CouchDB for Obsidian Self-hosted LiveSync. The vault's git history is committed every 15 minutes | Internet, through the proxy |
